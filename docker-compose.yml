@@ -1,0 +1,9 @@
+version: "3"
+
+services:
+  unbound:
+    network_mode: host
+    container_name: unbound
+    image: ghcr.io/mfbernardes/docker-unbound:latest
+    restart: unless-stopped
+
