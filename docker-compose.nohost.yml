@@ -1,0 +1,50 @@
+version: "2.3"
+
+services:
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    networks:
+      default:
+        ipv4_address: 10.1.1.10
+        ipv6_address: fd80:eeda:f519:3bf5::10
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "8053:80/tcp"
+    environment:
+      TZ: 'Europe/Berlin'
+      PIHOLE_DNS_: '10.1.1.11;fd80:eeda:f519:3bf5::11'
+    volumes:
+      - './etc/pihole/:/etc/pihole/'
+      - './etc/dnsmasq.d/:/etc/dnsmasq.d/'
+    restart: unless-stopped
+
+  unbound:
+    container_name: unbound
+    networks:
+      default:
+        ipv4_address: 10.1.1.11
+        ipv6_address: fd80:eeda:f519:3bf5::11
+    image: ghcr.io/mfbernardes/docker-unbound:latest
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETGID
+      - SETUID
+    env_file:
+      - unbound.env
+    restart: unless-stopped
+
+
+networks:
+  default:
+    enable_ipv6: true
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.1.1.0/24
+          gateway: 10.1.1.1
+        - subnet: fd80:eeda:f519:3bf5::/64
+          gateway: fd80:eeda:f519:3bf5::1
+

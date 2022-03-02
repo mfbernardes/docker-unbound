@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  pihole:
+    network_mode: host
+    container_name: pihole
+    image: pihole/pihole:latest
+    env_file:
+      - pihole.env
+    volumes:
+      - ./pihole:/etc/pihole
+      - ./dnsmasq.d:/etc/dnsmasq.d
+    restart: unless-stopped
+
+  unbound:
+    network_mode: host
+    container_name: unbound
+    image: ghcr.io/mfbernardes/docker-unbound:latest
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETGID
+      - SETUID
+    environment:
+      ENABLE_IPV6: "yes"
+    restart: unless-stopped
