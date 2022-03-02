@@ -10,4 +10,6 @@ services:
     cap_add:
       - SETGID
       - SETUID
+    environment:
+      ENABLE_IPV6: "yes"
     restart: unless-stopped

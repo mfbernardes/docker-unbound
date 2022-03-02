@@ -1,21 +1,23 @@
+include-toplevel: "/etc/unbound/unbound.conf.d/*.conf"
+
 server:
     # If no logfile is specified, syslog is used
     #logfile: "/var/log/unbound/unbound.log"
-    verbosity: 0
+    verbosity: ${VERBOSITY}
 
-    interface: 127.0.0.1
-    interface: ::1
-    port: 5553
-    do-ip4: yes
+    interface: ${LISTEN_IPV4}
+    interface: ${LISTEN_IPV6}
+    port: ${LISTEN_PORT}
+
+
+    do-ip4: ${DISABLE_IPV4}
     do-udp: yes
     do-tcp: yes
 
-    do-ip6: yes
-    prefer-ip6: yes
+    do-ip6: ${ENABLE_IPV6}
+    prefer-ip6: ${ENABLE_IPV6}
 
     prefetch: yes
-
-    #root-hints: "/var/lib/unbound/root.hints"
 
     harden-glue: yes
     harden-dnssec-stripped: yes
@@ -25,7 +27,7 @@ server:
     num-threads: 1
 
     # Ensure kernel buffer is large enough to not lose messages in traffic spikes
-    #so-rcvbuf: 1m
+    #so-rcvbuf: ${SO_RCVBUF}
 
     #so-reuseport: yes
 
