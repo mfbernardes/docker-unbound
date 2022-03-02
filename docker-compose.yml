@@ -5,5 +5,9 @@ services:
     network_mode: host
     container_name: unbound
     image: ghcr.io/mfbernardes/docker-unbound:latest
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETGID
+      - SETUID
     restart: unless-stopped
-

@@ -4,10 +4,8 @@ FROM debian:${DEBIAN_VERSION:-bullseye-slim}
 RUN apt update && \
     apt install --no-install-recommends -y unbound && \
     rm -rf /var/cache/apt/archives /var/lib/apt/lists/* && \
-    mkdir -p /var/log/unbound && \
-    touch /var/log/unbound/unbound.log && \
-    chown -R unbound:unbound /var/log/unbound && \
-    chmod 0644 /var/log/unbound/unbound.log
+    install -m 0755 -o unbound -g unbound -D /dev/null /var/log/unbound/unbound.log && \
+    install -m 0644 -o unbound -g unbound /usr/share/dns/root.key /var/lib/unbound/root.key
 
 COPY debian-root /
 
